@@ -1,7 +1,14 @@
 {
   "fleet": {
     "vehicles_no": 5,
-    "each_vehicle_capacity": 1000
+    "each_vehicle_capacity": 1000,
+    "depot": {
+      "no": 0,
+      "name": "Kraków",
+      "demand": 0,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    }
   },
   "clients": [
     {
