@@ -1,0 +1,218 @@
+{
+  "fleet": {
+    "vehicles_no": 5,
+    "each_vehicle_capacity": 1000
+  },
+  "clients": [
+    {
+      "no": 1,
+      "name": "Białystok",
+      "demand": 500,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 2,
+      "name": "Bielsko-Biała",
+      "demand": 50,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 3,
+      "name": "Chrzanów",
+      "demand": 400,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 4,
+      "name": "Gdańsk",
+      "demand": 200,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 5,
+      "name": "Gdynia",
+      "demand": 100,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 6,
+      "name": "Gliwice",
+      "demand": 40,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 7,
+      "name": "Gromnik",
+      "demand": 200,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 8,
+      "name": "Katowice",
+      "demand": 300,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 9,
+      "name": "Kielce",
+      "demand": 30,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 10,
+      "name": "Krosno",
+      "demand": 60,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 11,
+      "name": "Krynica",
+      "demand": 50,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 12,
+      "name": "Lublin",
+      "demand": 60,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 13,
+      "name": "Łódź",
+      "demand": 160,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 14,
+      "name": "Malbork",
+      "demand": 100,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 15,
+      "name": "Nowy Targ",
+      "demand": 120,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 16,
+      "name": "Olsztyn",
+      "demand": 300,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 17,
+      "name": "Poznań",
+      "demand": 100,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 18,
+      "name": "Puławy",
+      "demand": 200,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 19,
+      "name": "Radom",
+      "demand": 100,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 20,
+      "name": "Rzeszów",
+      "demand": 60,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 21,
+      "name": "Sandomierz",
+      "demand": 200,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 22,
+      "name": "Szczecin",
+      "demand": 150,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 23,
+      "name": "Szczucin",
+      "demand": 60,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 24,
+      "name": "Szklarska Poręba",
+      "demand": 50,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 25,
+      "name": "Tarnów",
+      "demand": 70,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 26,
+      "name": "Warszawa",
+      "demand": 200,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 27,
+      "name": "Wieliczka",
+      "demand": 90,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 28,
+      "name": "Wrocław",
+      "demand": 40,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 29,
+      "name": "Zakopane",
+      "demand": 200,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    },
+    {
+      "no": 30,
+      "name": "Zamość",
+      "demand": 300,
+      "x_coord": 0.0,
+      "y_coord": 0.0
+    }
+  ]
+}
