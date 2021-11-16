@@ -1,7 +1,7 @@
 import json
 import os
 
-from data_structs import Node, Model, Nodes
+from data_structs import Node, Model
 
 def read_file(file_name):
     inputs_dir = os.path.join(os.path.abspath(os.path.curdir), 'inputs')
@@ -19,10 +19,10 @@ def setup_model(data):
             data['fleet']['depot']['y_coord']
         )
     model = Model(
-        data['each_vehicle_capacity'],
-        depot
+        data['fleet']['each_vehicle_capacity'],
+        depot,
+        data['fleet']['vehicles_no'], 
     )
-    nodes = Nodes()
     for client in data['clients']:
         client = Node(
             client['no'], 
@@ -31,10 +31,7 @@ def setup_model(data):
             client['x_coord'],
             client['y_coord']
         )
-        nodes.add_client(client)
-        nodes.add_seq_no(client.seq_no)
+        model.node_list.append(client)
 
-    model.node_list = nodes
-    model.node_seq_no_list = nodes.seq_no_list
     return model
     
