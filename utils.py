@@ -37,18 +37,25 @@ def strategy_one(model: Model):
     return result
 
 
-def strategy_two(model):
-    """Mieszanie miast między ścieżkami"""
-    pass
-
-
-def strategy_three(model):
+def strategy_two(model: Model):
     """Losowe przenoszenie miast"""
-    pass
+    paths = copy.deepcopy(model.current_best_solution)
+    random_origin_path = paths[random.randint(0, len(paths) - 1)]
+    random_origin_node = random_origin_path.pop(random.randint(1, len(random_origin_path) - 2))
+    
+    while True:
+        random_target_path = paths[random.randint(0, len(paths) - 1)]
+        index = random.randint(1, len(random_target_path) - 2)
+        random_target_path.insert(index, random_origin_node)
+
+        if validate_capacity(random_target_path, model.vehicle_cap):
+            return paths
+        else:
+            random_target_path.pop(index)
 
 
-STRATEGIES = [strategy_one, strategy_two, strategy_three]
+STRATEGIES = [strategy_one, strategy_two]
 
-def prepare_solution(model: Model, strategy=0):
+def prepare_solution(model: Model, strategy):
     function = STRATEGIES[strategy]
     return function(model)
