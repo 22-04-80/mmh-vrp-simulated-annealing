@@ -1,6 +1,4 @@
-import math
 import random
-from itertools import tee
 import copy
 
 from data_structs import Model
@@ -27,23 +25,30 @@ def validate_capacity(path, available_capacity):
     return demand <= available_capacity
 
 
-def epsilon(candidate_list_of_paths, best_list_of_path, temperature):
-    return math.exp((fitness(candidate_list_of_paths) - fitness(best_list_of_path)) / temperature)
+def strategy_one(model: Model):
+    """Mieszanie miast tylko w ramach jednej ścieżki"""
+    paths = copy.deepcopy(model.current_best_solution)
+    result = []
+    for path in paths:
+        path = path[1:-1]
+        random.shuffle(path)
+        path = [model.depot] + path + [model.depot]
+        result.append(path)
+    return result
 
 
-def fitness(list_of_paths):
-    res = 0
-    for path in list_of_paths:
-        path_dist = 0
-        left, right = tee(path)
-        for node1, node2 in zip(left, list(right)[1:]):
-            path_dist += distance(node1, node2)
-        res += path_dist
-    
-    return res
+def strategy_two(model):
+    """Mieszanie miast między ścieżkami"""
+    pass
 
 
-def distance(node1, node2):
-    x1, y1 = node1.x_coord, node1.y_coord
-    x2, y2 = node2.x_coord, node2.y_coord
-    return math.sqrt((x1-x2)**2+(y1-y2)**2)
+def strategy_three(model):
+    """Losowe przenoszenie miast"""
+    pass
+
+
+STRATEGIES = [strategy_one, strategy_two, strategy_three]
+
+def prepare_solution(model: Model, strategy=0):
+    function = STRATEGIES[strategy]
+    return function(model)
