@@ -2,13 +2,14 @@ from data_reader import read_file, setup_model
 import sys
 from random import uniform
 
-from utils import generate_initial_solution, epsilon, fitness
+from utils import generate_initial_solution, prepare_solution
 
 def start():
     TEMP = 100
-    COOLING_FACTOR = 0.9
+    COOLING_FACTOR = 0.90
     EPOCHS = 1000
     ATTEMPTS = 500
+    MINIMAL_TEMP = 5
     
     try:
         file_name = sys.argv[1]
@@ -17,20 +18,31 @@ def start():
     data = read_file(file_name)
     model = setup_model(data)
 
-    best_list_of_path = generate_initial_solution(model)
+    model.current_best_solution = generate_initial_solution(model)
+    model.first_solution = model.current_best_solution
 
     for _ in range(EPOCHS):
         for _ in range(ATTEMPTS):
 
-            candidate_list_of_paths = [[]]
+            candidate_list_of_paths = prepare_solution(model)
             
-            if fitness(candidate_list_of_paths) < fitness(best_list_of_path):
-                best_list_of_path = candidate_list_of_paths
+            if model.fitness(candidate_list_of_paths) < model.fitness(model.current_best_solution):
+                model.current_best_solution = candidate_list_of_paths
 
-            elif uniform(0, 1) < epsilon(candidate_list_of_paths, best_list_of_path, TEMP):
-                best_list_of_path = candidate_list_of_paths
-
+            elif uniform(0, 1) < model.epsilon(candidate_list_of_paths, model.current_best_solution, TEMP):
+                model.current_best_solution = candidate_list_of_paths
+            
+            print('.', sep='', end='', flush=True)
+        
+        if TEMP <= MINIMAL_TEMP:
+            break
         TEMP *= COOLING_FACTOR
+        print('current temp:', TEMP)
+    
+    print('first solution:', model.fitness(model.first_solution))
+    print('current best distance:', model.fitness(model.current_best_solution))
+    print('best known distance:', model.fitness(model.best_known_solution))
+    print('TEMP:', TEMP)
     
 
 if __name__ == '__main__':
