@@ -14,7 +14,7 @@ def generate_initial_solution(model: Model):
     groups = list(chunker_list(clients, model.no_of_vehicles))
 
     if all([validate_capacity(path, model.vehicle_cap) for path in groups]):
-        return groups
+        return [[model.depot] + group + [model.depot] for group in groups]
     else:
         return generate_initial_solution(model)
 
