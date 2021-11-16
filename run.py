@@ -1,6 +1,6 @@
 from data_reader import read_file, setup_model
 import sys
-from random import uniform
+from random import random, uniform, randint, seed
 
 from utils import generate_initial_solution, prepare_solution
 
@@ -8,8 +8,9 @@ def start():
     TEMP = 100
     COOLING_FACTOR = 0.90
     EPOCHS = 1000
-    ATTEMPTS = 500
+    ATTEMPTS = 50
     MINIMAL_TEMP = 5
+    seed(0)
     
     try:
         file_name = sys.argv[1]
@@ -23,8 +24,8 @@ def start():
 
     for _ in range(EPOCHS):
         for _ in range(ATTEMPTS):
-
-            candidate_list_of_paths = prepare_solution(model)
+            strategy = randint(0, 1)
+            candidate_list_of_paths = prepare_solution(model, strategy)
             
             if model.fitness(candidate_list_of_paths) < model.fitness(model.current_best_solution):
                 model.current_best_solution = candidate_list_of_paths
@@ -39,6 +40,7 @@ def start():
         TEMP *= COOLING_FACTOR
         print('current temp:', TEMP)
     
+    print()
     print('first solution:', model.fitness(model.first_solution))
     print('current best distance:', model.fitness(model.current_best_solution))
     print('best known distance:', model.fitness(model.best_known_solution))
