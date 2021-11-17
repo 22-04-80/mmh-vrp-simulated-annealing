@@ -1,14 +1,12 @@
 import random
 import copy
 
-from data_structs import Model
-
 
 def chunker_list(seq, size):
     return (seq[i::size] for i in range(size))
 
 
-def generate_initial_solution(model: Model):
+def generate_initial_solution(model):
     clients = copy.deepcopy(model.node_list)
     random.shuffle(clients)
     groups = list(chunker_list(clients, model.no_of_vehicles))
@@ -27,7 +25,7 @@ def validate_capacity(path, available_capacity):
     return demand <= available_capacity
 
 
-def strategy_one(model: Model):
+def strategy_one(model):
     """Mieszanie miast tylko w ramach jednej ścieżki"""
     paths = copy.deepcopy(model.current_best_solution)
     result = []
@@ -39,7 +37,7 @@ def strategy_one(model: Model):
     return result
 
 
-def strategy_two(model: Model):
+def strategy_two(model):
     """Losowe przenoszenie miast między ścieżkami"""
     paths = copy.deepcopy(model.current_best_solution)
     random_origin_path = paths[random.randint(0, len(paths) - 1)]
@@ -66,6 +64,6 @@ def strategy_two(model: Model):
 STRATEGIES = [strategy_one, strategy_two]
 
 
-def prepare_solution(model: Model, strategy):
+def prepare_solution(model, strategy):
     function = STRATEGIES[strategy]
     return function(model)
