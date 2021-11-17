@@ -43,11 +43,18 @@ def strategy_two(model: Model):
     """Losowe przenoszenie miast między ścieżkami"""
     paths = copy.deepcopy(model.current_best_solution)
     random_origin_path = paths[random.randint(0, len(paths) - 1)]
+    while len(random_origin_path) <= 3:
+        # nie wyciągamy miasta ze ścieżki jeśli jest jedynym klientem
+        random_origin_path = paths[random.randint(0, len(paths) - 1)]
     random_origin_node = random_origin_path.pop(random.randint(1, len(random_origin_path) - 2))
     
     while True:
         random_target_path = paths[random.randint(0, len(paths) - 1)]
-        index = random.randint(1, len(random_target_path) - 2)
+        if len(random_target_path) == 2:
+            # to oznacza że tylko baza jest w tej ścieżce
+            index = 1
+        else:
+            index = random.randint(1, len(random_target_path) - 2)
         random_target_path.insert(index, random_origin_node)
 
         if validate_capacity(random_target_path, model.vehicle_cap):
