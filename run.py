@@ -3,7 +3,7 @@ import sys
 from random import uniform, randint
 import random
 
-from utils import generate_initial_solution, prepare_solution
+from utils import generate_initial_solution, prepare_solution, prepare_output
 
 
 def start():
@@ -26,8 +26,11 @@ def start():
     model.current_best_solution = generate_initial_solution(model)
     model.first_solution = model.current_best_solution
 
-    for _ in range(epochs):
-        for _ in range(attempts):
+    for e in range(epochs):
+        print('Epoch:', e+1)
+        for a in range(attempts):
+            if (a+1) % 50 == 0:
+                print('\tAttempt:', a+1)
             strategy = randint(0, 1)
             candidate_list_of_paths = prepare_solution(model, strategy)
             
@@ -36,20 +39,27 @@ def start():
 
             elif uniform(0, 1) < model.epsilon(candidate_list_of_paths, model.current_best_solution, temp):
                 model.current_best_solution = candidate_list_of_paths
-            
-            print('.', sep='', end='', flush=True)
-        
+
         if temp <= minimal_temp:
             break
         temp *= cooling_factor
-        print('current temp:', temp)
-    
+        print('Najlepsze rozwiązanie epoki:', model.fitness(model.current_best_solution))
+        print('New temperature:', temp)
+
     print()
-    print('first solution:', model.fitness(model.first_solution))
-    print('current best distance:', model.fitness(model.current_best_solution))
-    print('best known distance:', model.fitness(model.best_known_solution))
-    print('temp:', temp)
-    
+    print('==========')
+    print()
+    print('Ostatnia temperatura:', temp)
+    print('Pierwszy wynik:', model.fitness(model.first_solution))
+    print('Pierwsze rozwiązanie:', [[node.name for node in path] for path in model.first_solution])
+    print('Pierwsze rozwiązanie (zapotrzebowania):', [sum([node.demand for node in path]) for path in model.first_solution])
+    print('Pierwsze rozwiązanie:', [sum([node.demand for node in path]) for path in model.first_solution])
+    print('Najlepszy wynik:', model.fitness(model.best_known_solution))
+    print('Najlepsze rozwiązanie:', [[node.name for node in path] for path in model.best_known_solution])
+    print('Najlepsze rozwiązanie (zapotrzebowania):', [sum([node.demand for node in path]) for path in model.best_known_solution])
+
+    prepare_output(model, 'results.json')
+
 
 if __name__ == '__main__':
     start()
