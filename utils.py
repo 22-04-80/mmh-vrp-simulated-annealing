@@ -3,8 +3,10 @@ import copy
 
 from data_structs import Model
 
+
 def chunker_list(seq, size):
     return (seq[i::size] for i in range(size))
+
 
 def generate_initial_solution(model: Model):
     clients = copy.deepcopy(model.node_list)
@@ -38,7 +40,7 @@ def strategy_one(model: Model):
 
 
 def strategy_two(model: Model):
-    """Losowe przenoszenie miast"""
+    """Losowe przenoszenie miast między ścieżkami"""
     paths = copy.deepcopy(model.current_best_solution)
     random_origin_path = paths[random.randint(0, len(paths) - 1)]
     random_origin_node = random_origin_path.pop(random.randint(1, len(random_origin_path) - 2))
@@ -55,6 +57,7 @@ def strategy_two(model: Model):
 
 
 STRATEGIES = [strategy_one, strategy_two]
+
 
 def prepare_solution(model: Model, strategy):
     function = STRATEGIES[strategy]

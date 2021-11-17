@@ -39,7 +39,6 @@ class Model:
         x2, y2 = node2.x_coord, node2.y_coord
         return math.sqrt((x1-x2)**2+(y1-y2)**2)
 
-
     @staticmethod
     def fitness(list_of_paths):
         res = 0

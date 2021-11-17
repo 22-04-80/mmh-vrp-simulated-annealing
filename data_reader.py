@@ -3,12 +3,14 @@ import os
 
 from data_structs import Node, Model
 
+
 def read_file(file_name):
     inputs_dir = os.path.join(os.path.abspath(os.path.curdir), 'inputs')
     file_path = os.path.join(inputs_dir, file_name)
     with open(file_path) as fp:
         data = json.load(fp)
     return data
+
 
 def setup_model(data):
     depot = Node(
@@ -34,4 +36,3 @@ def setup_model(data):
         model.node_list.append(client)
 
     return model
-    
