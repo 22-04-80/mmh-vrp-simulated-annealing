@@ -11,6 +11,16 @@ class Node:
         self.y_coord = y_coord
 
 
+class Result:
+    def __init__(self, epoch, attempt, temp, result, current_best_known, best_of_the_attempt):
+        self.epoch = epoch
+        self.attempt = attempt
+        self.temp = temp
+        self.result = result
+        self.current_best_known = current_best_known
+        self.best_of_the_attempt = best_of_the_attempt
+
+
 class Model:
     def __init__(self, vehicle_cap, depot, no_of_vehicles) -> None:
         self.depot = depot
@@ -20,7 +30,8 @@ class Model:
         self.best_known_solution = None
         self.__current_best_solution = None
         self.first_solution = None
-    
+        self.results = []
+
     @property
     def current_best_solution(self):
         return self.__current_best_solution

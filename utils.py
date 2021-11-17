@@ -1,3 +1,4 @@
+import json
 import random
 import copy
 
@@ -67,3 +68,21 @@ STRATEGIES = [strategy_one, strategy_two]
 def prepare_solution(model, strategy):
     function = STRATEGIES[strategy]
     return function(model)
+
+
+def prepare_output(model, output_file):
+    res = []
+    for result in model.results:
+        row = {
+            'epoch': result.epoch,
+            'attempt': result.attempt,
+            'temp': result.temp,
+            'paths': [[{"city": node.name, "x": node.x_coord, "y": node.y_coord} for node in path] for path in result.result],
+            'current_best_known_value': model.fitness(result.current_best_known),
+            'best_attempt_value': model.fitness(result.best_of_the_attempt),
+        }
+        res.append(row)
+    print('Proszę czekać, trwa zapisywanie pliku')
+    with open(output_file, 'wt', encoding='utf-8') as f:
+        json.dump(res, f, ensure_ascii=False)
+    print('Zakończono')

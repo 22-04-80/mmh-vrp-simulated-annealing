@@ -1,9 +1,9 @@
 {
   "parameters": {
     "initial_temperature": 100,
-    "cooling_factor": 0.99 ,
+    "cooling_factor": 0.9,
     "epochs": 1000,
-    "attempts": 500,
+    "attempts": 200,
     "minimal_temp": 5,
     "random_seed": false
   },

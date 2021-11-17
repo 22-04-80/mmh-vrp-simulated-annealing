@@ -3,6 +3,7 @@ import sys
 from random import uniform, randint
 import random
 
+from data_structs import Result
 from utils import generate_initial_solution, prepare_solution, prepare_output
 
 
@@ -26,11 +27,11 @@ def start():
     model.current_best_solution = generate_initial_solution(model)
     model.first_solution = model.current_best_solution
 
-    for e in range(epochs):
-        print('Epoch:', e+1)
-        for a in range(attempts):
-            if (a+1) % 50 == 0:
-                print('\tAttempt:', a+1)
+    for epoch in range(epochs):
+        print('Epoka:', epoch+1)
+        for attempt in range(attempts):
+            if (attempt+1) % 50 == 0:
+                print('\tPróba:', attempt+1)
             strategy = randint(0, 1)
             candidate_list_of_paths = prepare_solution(model, strategy)
             
@@ -40,11 +41,21 @@ def start():
             elif uniform(0, 1) < model.epsilon(candidate_list_of_paths, model.current_best_solution, temp):
                 model.current_best_solution = candidate_list_of_paths
 
+            result = Result(
+                epoch,
+                attempt,
+                temp,
+                candidate_list_of_paths,
+                model.best_known_solution,
+                model.current_best_solution
+            )
+            model.results.append(result)
+
         if temp <= minimal_temp:
             break
         temp *= cooling_factor
         print('Najlepsze rozwiązanie epoki:', model.fitness(model.current_best_solution))
-        print('New temperature:', temp)
+        print('Nowa temperatura:', temp)
 
     print()
     print('==========')
