@@ -78,6 +78,7 @@ def prepare_output(model, output_file):
             'attempt': result.attempt,
             'temp': result.temp,
             'paths': [[{"city": node.name, "x": node.x_coord, "y": node.y_coord} for node in path] for path in result.result],
+            'current_value': model.fitness(result.result),
             'current_best_known_value': model.fitness(result.current_best_known),
             'best_attempt_value': model.fitness(result.best_of_the_attempt),
         }
