@@ -51,9 +51,8 @@ def start():
             )
             model.results.append(result)
 
-        if temp <= minimal_temp:
-            break
-        temp *= cooling_factor
+        if temp > minimal_temp:
+            temp *= cooling_factor
         print('Najlepsze rozwiązanie epoki:', model.fitness(model.current_best_solution))
         print('Nowa temperatura:', temp)
 
