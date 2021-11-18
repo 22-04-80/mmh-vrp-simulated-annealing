@@ -1,11 +1,11 @@
 {
   "parameters": {
     "initial_temperature": 100,
-    "cooling_factor": 0.9,
-    "epochs": 1000,
-    "attempts": 200,
+    "cooling_factor": 0.9834,
+    "epochs": 200,
+    "attempts": 500,
     "minimal_temp": 5,
-    "random_seed": false
+    "random_seed": true
   },
   "fleet": {
     "vehicles_no": 5,
