@@ -2,6 +2,7 @@ import React from 'react';
 import { Attempt } from '../interfaces/Attempt';
 import { City } from '../interfaces/City';
 import { Temperature } from './Temperature';
+import "./graph.css";
 
 const CANVAS_WIDTH = 800
 const CANVAS_HEIGHT = 800
@@ -156,6 +157,24 @@ export class Graph extends React.Component<GraphProps, GraphState> {
         return Boolean(this.state.interval);
     }
 
+    private goToBestAttempt: () => void = () => {
+        const {data} = this.props;
+        let bestResultIndex: number = 0;
+        let bestResultFitness: number = data[bestResultIndex].current_value;
+
+        data.forEach((attempt: Attempt, index: number) => {
+            if (attempt.current_value < bestResultFitness) {
+                bestResultFitness = attempt.current_value;
+                bestResultIndex = index;
+            }
+        });
+
+        this.setState(() => {
+            this.drawAttempt(data[bestResultIndex]);
+            return ({attemptIndex: bestResultIndex});
+        });
+    }
+
     render() {
         const {data} = this.props;
         const {attemptIndex} = this.state
@@ -164,64 +183,64 @@ export class Graph extends React.Component<GraphProps, GraphState> {
         const currentAttempt = data ? data[attemptIndex] : null;
 
         return (
-            <div>
-                <div>
-                    <button
-                        disabled={this.isSimulationRunning()}
-                        onClick={this.startSimulation}
-                    >
-                        Start simulation
-                    </button>
-                    <button
-                        disabled={!this.isSimulationRunning()}
-                        onClick={this.stopSimulation}
-                    >
-                        Stop simulation
-                    </button>
-                </div>
-                <div>
-                    <input
-                        type="range"
-                        id="attempt"
-                        name="attempt"
-                        min="0"
-                        max={data.length - 1}
-                        value={attemptIndex}
-                        onChange={(event) => {
-                            const newIndex = Number(event.target.value);
-                            this.setState({attemptIndex: newIndex});
-                            this.drawAttempt(data[newIndex]);
-                        }}
-                    />
-                    <label htmlFor="attempt">Attempt</label>
-                </div>
-                <button onClick={this.showNextStep}>
-                    Next step
-                </button>
-                <br />
-                <div>
-                    Current epoch: {currentAttempt?.epoch}
-                </div>
-                <div>
-                    Current attempt: {currentAttempt?.attempt}
-                </div>
-                <Temperature
-                    maxTemperautre={edgeTemperatures.max}
-                    minTemperature={edgeTemperatures.min}
-                    currentTemperature={currentAttempt?.temp || 0}
-                />
-                <div>
-                    Current distance {currentAttempt?.current_value.toFixed(2) || 0}
-                </div>
-                <div>
-                    Best known distance in current epoch {currentAttempt?.best_attempt_value.toFixed(2) || 0}
-                </div>
-                <div>
-                    Best known distance {currentAttempt?.current_best_known_value.toFixed(2) || 0}
-                </div>
-                <br />
-                <div>
+            <div className="container">
+                <div className="content">
                     <canvas width={CANVAS_WIDTH} height={CANVAS_HEIGHT} ref={this.canvas}></canvas>
+                </div>
+                <div className="controls">
+                    <div>
+                        <button
+                            disabled={this.isSimulationRunning()}
+                            onClick={this.startSimulation}
+                        >
+                            Start simulation
+                        </button>
+                        <button
+                            disabled={!this.isSimulationRunning()}
+                            onClick={this.stopSimulation}
+                        >
+                            Stop simulation
+                        </button>
+                    </div>
+                    <div>
+                        <input
+                            type="range"
+                            id="attempt"
+                            name="attempt"
+                            min="0"
+                            max={data.length - 1}
+                            value={attemptIndex}
+                            onChange={(event) => {
+                                const newIndex = Number(event.target.value);
+                                this.setState({attemptIndex: newIndex});
+                                this.drawAttempt(data[newIndex]);
+                            }}
+                        />
+                        <label htmlFor="attempt">Attempt</label>
+                    </div>
+                    <button onClick={this.showNextStep}>
+                        Next step
+                    </button>
+                    <button onClick={this.goToBestAttempt}>
+                        Show best result
+                    </button>
+                    <div>
+                        Current epoch: {currentAttempt?.epoch}
+                    </div>
+                    <div>
+                        Current attempt: {currentAttempt?.attempt}
+                    </div>
+                    <Temperature
+                        maxTemperautre={edgeTemperatures.max}
+                        minTemperature={edgeTemperatures.min}
+                        currentTemperature={currentAttempt?.temp || 0}
+                    />
+                    <div>
+                        Current distance {currentAttempt?.current_value.toFixed(2) || 0}
+                    </div>
+                    <div>
+                        Best known distance {currentAttempt?.current_best_known_value.toFixed(2) || 0}
+                    </div>
                 </div>
             </div>
         );
