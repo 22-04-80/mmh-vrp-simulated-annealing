@@ -3,15 +3,19 @@ import { Attempt } from '../interfaces/Attempt';
 import { City } from '../interfaces/City';
 import { Temperature } from './Temperature';
 
-const CANVAS_WIDTH = 1600
-const CANVAS_HEIGHT = 1600
+const CANVAS_WIDTH = 800
+const CANVAS_HEIGHT = 800
 const CITY_RADIUS = 10
 const STROKE_WIDTH = 3
 const colors = ["rgba(0, 0, 0, 0.5)", "rgba(255, 0, 0, 0.5)", "rgba(0, 255, 0, 0.5)", "rgba(0, 0, 255, 0.5)", "rgba(255, 0, 255, 0.5)"]
+const SIMULATION_STEP_INTERVAL_MS = 300
 
 interface GraphProps {data: Attempt[]}
 
-interface GraphState {attemptIndex: number}
+interface GraphState {
+    attemptIndex: number;
+    interval: NodeJS.Timeout | null;
+}
 
 export class Graph extends React.Component<GraphProps, GraphState> {
     private canvas;
@@ -21,6 +25,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
 
         this.state = {
             attemptIndex: 0,
+            interval: null,
         };
         this.canvas = React.createRef<HTMLCanvasElement>();
     }
@@ -54,7 +59,6 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     private scaleCoordsToCanvas(attempt: Attempt): Attempt {
         const attemptCopy = JSON.parse(JSON.stringify(attempt));
         const edgeCoordinates = this.getEdgeCoordinates(attemptCopy);
-        console.log({edgeCoordinates})
         
         attemptCopy.paths.forEach((path: City[]) => {
             path.forEach((city: City) => {
@@ -125,6 +129,33 @@ export class Graph extends React.Component<GraphProps, GraphState> {
         })
     }
 
+    private startSimulation: () => void = () => {
+        if (this.state.interval) {
+            return;
+        }
+
+        const interval = setInterval(() => {
+            if (this.state.attemptIndex >= this.props.data.length) {
+                this.stopSimulation();
+            } else {
+                this.showNextStep()
+            }
+        }, SIMULATION_STEP_INTERVAL_MS);
+        this.setState({interval});
+    }
+
+    private stopSimulation: () => void = () => {
+        const {interval} = this.state;
+        if (interval) {
+            clearInterval(interval);
+            this.setState({interval: null});
+        }
+    }
+
+    private isSimulationRunning: () => boolean = () => {
+        return Boolean(this.state.interval);
+    }
+
     render() {
         const {data} = this.props;
         const {attemptIndex} = this.state
@@ -134,6 +165,20 @@ export class Graph extends React.Component<GraphProps, GraphState> {
 
         return (
             <div>
+                <div>
+                    <button
+                        disabled={this.isSimulationRunning()}
+                        onClick={this.startSimulation}
+                    >
+                        Start simulation
+                    </button>
+                    <button
+                        disabled={!this.isSimulationRunning()}
+                        onClick={this.stopSimulation}
+                    >
+                        Stop simulation
+                    </button>
+                </div>
                 <div>
                     <input
                         type="range"
