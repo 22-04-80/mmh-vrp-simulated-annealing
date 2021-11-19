@@ -1,6 +1,7 @@
 import React from 'react';
 import {Graph} from "./graph/Graph";
 import { Attempt } from './interfaces/Attempt';
+import { City } from './interfaces/City';
 
 interface AppState {data: Attempt[]}
 
@@ -16,8 +17,18 @@ class App extends React.Component<any, AppState> {
     e.preventDefault()
     const reader = new FileReader()
     reader.onload = async (e) => { 
-      const text = (e?.target?.result)
-      this.setState({data: JSON.parse(text as string)})
+      const fileContent = (e?.target?.result)
+      const data: Attempt[] = JSON.parse(fileContent as string)
+      const preparedData = data.map((attempt: Attempt) => {
+        attempt.paths = attempt.paths.map((path: City[]) => {
+          return path.map((city: City) => {
+            city.y = -city.y;
+            return city;
+          })
+        });
+        return attempt;
+      })
+      this.setState({data: preparedData})
     };
     reader.readAsText(e?.target?.files[0])
   }
