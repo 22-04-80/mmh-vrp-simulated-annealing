@@ -17,7 +17,6 @@ class App extends React.Component<any, AppState> {
     const reader = new FileReader()
     reader.onload = async (e) => { 
       const text = (e?.target?.result)
-      console.log(text)
       this.setState({data: JSON.parse(text as string)})
     };
     reader.readAsText(e?.target?.files[0])

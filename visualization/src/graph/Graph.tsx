@@ -18,10 +18,17 @@ export class Graph extends React.Component<GraphProps, GraphState> {
 
     constructor(props: any) {
         super(props);
+
         this.state = {
             attemptIndex: 0,
         };
         this.canvas = React.createRef<HTMLCanvasElement>();
+    }
+
+    componentDidUpdate(prevProps: GraphProps) {
+        if (prevProps.data.length === 0 && this.props.data.length !== 0) {
+            this.drawAttempt(this.props.data[this.state.attemptIndex]);
+        }
     }
 
     private getEdgeCoordinates(attempt: Attempt): {maxX: number, minX: number, maxY: number, minY: number} {
@@ -67,17 +74,13 @@ export class Graph extends React.Component<GraphProps, GraphState> {
         ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
         const scaledAttempt = this.scaleCoordsToCanvas(attempt);
-        console.log(scaledAttempt.paths)
 
         scaledAttempt.paths.forEach((path: City[], index: number) => {
             path.forEach((city: City) => {
                 this.drawCity(ctx, city);
             })
             this.drawPath(ctx, path, colors[index]);
-        })
-
-
-
+        });
     }
 
     private drawCity(ctx: CanvasRenderingContext2D, city: City): void {
@@ -94,11 +97,11 @@ export class Graph extends React.Component<GraphProps, GraphState> {
     private drawPath(ctx: CanvasRenderingContext2D, path: City[], color: string): void {
         for(let i = 0; i < path.length - 1; i++) {
             ctx.strokeStyle = color;
-            ctx.beginPath();       // Start a new path
-            ctx.moveTo(path[i].x, path[i].y);    // Move the pen to (30, 50)
-            ctx.lineTo(path[i + 1].x, path[i + 1].y);  // Draw a line to (150, 100)
+            ctx.beginPath();
+            ctx.moveTo(path[i].x, path[i].y);
+            ctx.lineTo(path[i + 1].x, path[i + 1].y);
             ctx.lineWidth = STROKE_WIDTH;
-            ctx.stroke();          // Render the path
+            ctx.stroke();
         }
     }
 
@@ -113,18 +116,13 @@ export class Graph extends React.Component<GraphProps, GraphState> {
         return result;
     }
 
-    private getAttemptFitness(attempt: Attempt): number {
-        let total = 0;
+    private showNextStep = () => {
+        const {data} = this.props;
 
-        attempt.paths.forEach((path: City[]) => {
-            for(let i = 0; i < path.length; i++) {
-                const city1 = path[i];
-                const city2 = path[(i + 1) % path.length];
-                total += Math.sqrt((city2.x-city1.x) ** 2 + (city2.y - city2.x) ** 2);
-            }
+        this.setState((prevState) => {
+            this.drawAttempt(data[prevState.attemptIndex + 1]);
+            return ({attemptIndex: prevState.attemptIndex + 1})
         })
-
-        return total;
     }
 
     render() {
@@ -152,22 +150,29 @@ export class Graph extends React.Component<GraphProps, GraphState> {
                     />
                     <label htmlFor="attempt">Attempt</label>
                 </div>
-                <button
-                    onClick={() => this.setState((prevState) => {
-                        this.drawAttempt(data[prevState.attemptIndex + 1]);
-                        return ({attemptIndex: prevState.attemptIndex + 1})
-                    })}
-                >
+                <button onClick={this.showNextStep}>
                     Next step
                 </button>
                 <br />
+                <div>
+                    Current epoch: {currentAttempt?.epoch}
+                </div>
+                <div>
+                    Current attempt: {currentAttempt?.attempt}
+                </div>
                 <Temperature
                     maxTemperautre={edgeTemperatures.max}
                     minTemperature={edgeTemperatures.min}
-                    currentTemperature={currentAttempt ? currentAttempt.temp : 0}
+                    currentTemperature={currentAttempt?.temp || 0}
                 />
                 <div>
-                    Total distance {currentAttempt ? this.getAttemptFitness(currentAttempt).toFixed(2) : 0}
+                    Current distance {currentAttempt?.current_value.toFixed(2) || 0}
+                </div>
+                <div>
+                    Best known distance in current epoch {currentAttempt?.best_attempt_value.toFixed(2) || 0}
+                </div>
+                <div>
+                    Best known distance {currentAttempt?.current_best_known_value.toFixed(2) || 0}
                 </div>
                 <br />
                 <div>
