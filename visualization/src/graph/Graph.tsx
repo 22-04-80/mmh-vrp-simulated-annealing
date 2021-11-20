@@ -130,6 +130,15 @@ export class Graph extends React.Component<GraphProps, GraphState> {
         })
     }
 
+    private showPrevStep = () => {
+        const {data} = this.props;
+
+        this.setState((prevState) => {
+            this.drawAttempt(data[prevState.attemptIndex - 1]);
+            return ({attemptIndex: prevState.attemptIndex - 1})
+        })
+    }
+
     private startSimulation: () => void = () => {
         if (this.state.interval) {
             return;
@@ -175,6 +184,21 @@ export class Graph extends React.Component<GraphProps, GraphState> {
         });
     }
 
+    private getCurrentPath = () => {
+        const {data} = this.props;
+        const currentAttempt = data[this.state.attemptIndex];
+
+        if (!currentAttempt) {
+            return [];
+        }
+
+        return currentAttempt.paths.map((path: City[]) => {
+            return path.map((city: City) => {
+                return city.city;
+            })
+        })
+    }
+
     render() {
         const {data} = this.props;
         const {attemptIndex} = this.state
@@ -190,7 +214,7 @@ export class Graph extends React.Component<GraphProps, GraphState> {
                 <div className="controls">
                     <div>
                         <button
-                            disabled={this.isSimulationRunning()}
+                            disabled={this.isSimulationRunning() || !this.props.data?.length}
                             onClick={this.startSimulation}
                         >
                             Start simulation
@@ -215,13 +239,17 @@ export class Graph extends React.Component<GraphProps, GraphState> {
                                 this.setState({attemptIndex: newIndex});
                                 this.drawAttempt(data[newIndex]);
                             }}
+                            disabled={!this.props.data?.length}
                         />
                         <label htmlFor="attempt">Attempt</label>
                     </div>
-                    <button onClick={this.showNextStep}>
+                    <button onClick={this.showPrevStep} disabled={this.state.attemptIndex <= 0}>
+                        Previous step
+                    </button>
+                    <button onClick={this.showNextStep} disabled={!this.props.data?.length}>
                         Next step
                     </button>
-                    <button onClick={this.goToBestAttempt}>
+                    <button onClick={this.goToBestAttempt} disabled={!this.props.data?.length}>
                         Show best result
                     </button>
                     <div>
@@ -240,6 +268,25 @@ export class Graph extends React.Component<GraphProps, GraphState> {
                     </div>
                     <div>
                         Best known distance {currentAttempt?.current_best_known_value.toFixed(2) || 0}
+                    </div>
+                </div>
+                <div className="paths-container">
+                    <div>
+                        Current paths
+                    </div>
+                    <div className="paths">
+                        {this.getCurrentPath().map((path: string[], index) => (
+                            <div className="path">
+                                <div style={{color: colors[index]}}>
+                                    Path {index}
+                                </div>
+                                <ul>
+                                    {path.map((cityName) => (
+                                        <li>{cityName}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
